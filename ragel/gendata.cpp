@@ -71,6 +71,8 @@
 #include "rubyfflat.h"
 #include "rbxgoto.h"
 
+#include "crystaltable.h"
+
 string itoa( int i )
 {
 	char buf[16];
@@ -360,6 +362,25 @@ CodeGenData *ocamlMakeCodeGen( const char *sourceFileName, const char *fsmName, 
 	return codeGen;
 }
 
+/* Invoked by the parser when a ragel definition is opened. */
+CodeGenData *crystalMakeCodeGen( const char *sourceFileName, const char *fsmName, ostream &out )
+{
+	CodeGenData *codeGen = 0;
+	switch ( codeStyle ) {
+		case GenTables:
+			codeGen = new CrystalTabCodeGen(out);
+			break;
+		default:
+			cerr << "Table style is currently the only style supported for Crystal.\n";
+			exit(1);
+			break;
+	}
+	codeGen->sourceFileName = sourceFileName;
+	codeGen->fsmName = fsmName;
+
+	return codeGen;
+}
+
 
 CodeGenData *makeCodeGen( const char *sourceFileName, const char *fsmName, ostream &out )
 {
@@ -382,6 +403,8 @@ CodeGenData *makeCodeGen( const char *sourceFileName, const char *fsmName, ostre
 		cgd = csharpMakeCodeGen( sourceFileName, fsmName, out );
 	else if ( hostLang == &hostLangOCaml )
 		cgd = ocamlMakeCodeGen( sourceFileName, fsmName, out );
+	else if ( hostLang == &hostLangCrystal )
+		cgd = crystalMakeCodeGen( sourceFileName, fsmName, out );
 	return cgd;
 }
 
@@ -404,6 +427,8 @@ void lineDirective( ostream &out, const char *fileName, int line )
 			csharpLineDirective( out, fileName, line );
 		else if ( hostLang == &hostLangOCaml )
 			ocamlLineDirective( out, fileName, line );
+		else if ( hostLang == &hostLangCrystal )
+			rubyLineDirective( out, fileName, line );
 	}
 }
 
