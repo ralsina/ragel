@@ -104,6 +104,15 @@ void InputData::ocamlDefaultFileName( const char *inputFile )
 		outputFileName = fileNameFromStem( inputFile, ".ml" );
 }
 
+/* Invoked by the parser when the root element is opened. */
+void InputData::crystalDefaultFileName( const char *inputFile )
+{
+	/* If the output format is code and no output file name is given, then
+	 * make a default. */
+	if ( outputFileName == 0 )
+		outputFileName = fileNameFromStem( inputFile, ".cr" );
+}
+
 void InputData::makeOutputStream()
 {
 	if ( ! generateDot && ! generateXML ) {
@@ -127,6 +136,9 @@ void InputData::makeOutputStream()
 				break;
 			case HostLang::OCaml:
 				ocamlDefaultFileName( inputFileName );
+				break;
+			case HostLang::Crystal:
+				crystalDefaultFileName( inputFileName );
 				break;
 		}
 	}

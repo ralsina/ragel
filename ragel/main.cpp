@@ -127,7 +127,7 @@ void usage()
 "   -A                   The host language is C#\n"
 "   -O                   The host language is OCaml\n"
 "   -Y                   The host language is Crystal\n"
-"line directives: (C/D/Ruby/C#/OCaml)\n"
+"line directives: (C/D/Ruby/C#/OCaml/Crystal)\n"
 "   -L                   Inhibit writing of #line directives\n"
 "code style: (C/D/Java/Ruby/C#/OCaml)\n"
 "   -T0                  Table driven FSM (default)\n"
