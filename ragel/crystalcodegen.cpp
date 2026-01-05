@@ -53,7 +53,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-/* Target ruby impl */
+/* Target crystal impl */
 
 /* Target language and output style. */
 extern CodeStyle codeStyle;
@@ -65,7 +65,8 @@ extern bool noLineDirectives;
  * Callbacks invoked by the XML data parser.
  */
 
-
+/* Crystal line directives use the same format as Ruby, so we reuse the
+ * rubyLineDirective function for Crystal code generation. */
 void rubyLineDirective( ostream &out, const char *fileName, int line )
 {
 	if ( noLineDirectives )
@@ -313,7 +314,7 @@ string CrystalCodeGen::GET_KEY()
 	}
 	else {
 		/* Expression for retrieving the key, use dereference and read ordinal,
-		 * for compatibility with Ruby 1.9. */
+		 * for Crystal character ordinal access. */
 		ret << DATA() << "[" << P() << "].ord";
 	}
 	return ret.str();
