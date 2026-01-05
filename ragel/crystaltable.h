@@ -35,13 +35,13 @@ using std::string;
 using std::ostream;
 
 /*
- * RubyCodeGen
+ * CrystalCodeGen
  */
-class CrystalTabCodeGen : public RubyCodeGen
+class CrystalTabCodeGen : public CrystalCodeGen
 {
 public:
-	CrystalTabCodeGen( ostream &out ) : 
-          RubyCodeGen(out) {}
+	CrystalTabCodeGen( ostream &out ) :
+          CrystalCodeGen(out) {}
         virtual ~CrystalTabCodeGen() {}
 
 public:
