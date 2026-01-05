@@ -66,22 +66,7 @@ extern bool noLineDirectives;
  */
 
 /* Crystal line directives use the same format as Ruby, so we reuse the
- * rubyLineDirective function for Crystal code generation. */
-void rubyLineDirective( ostream &out, const char *fileName, int line )
-{
-	if ( noLineDirectives )
-		return;
-
-	/* Write a comment containing line info. */
-	out << "# line " << line  << " \"";
-	for ( const char *pc = fileName; *pc != 0; pc++ ) {
-		if ( *pc == '\\' )
-			out << "\\\\";
-		else
-			out << *pc;
-	}
-	out << "\"\n";
-}
+ * rubyLineDirective function from rubycodegen.cpp for Crystal code generation. */
 
 void CrystalCodeGen::genLineDirective( ostream &out )
 {
