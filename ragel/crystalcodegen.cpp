@@ -84,7 +84,7 @@ string CrystalCodeGen::DATA_PREFIX()
 
 std::ostream &CrystalCodeGen::STATIC_VAR( string type, string name )
 {
-	// In Crystal, constants must start with uppercase letter A-Z
+	// In Crystal, constants must start with uppercase A-Z to be accessible from functions
 	// Remove leading underscore and capitalize first character
 	string const_name = name;
 	if (!const_name.empty() && const_name[0] == '_') {
@@ -100,7 +100,7 @@ std::ostream &CrystalCodeGen::STATIC_VAR( string type, string name )
 
 std::ostream &CrystalCodeGen::OPEN_ARRAY( string type, string name )
 {
-	// In Crystal, constants must start with uppercase letter A-Z
+	// In Crystal, constants must start with uppercase A-Z
 	// Remove leading underscore and capitalize first alphabetic character
 	string const_name = name;
 	if (!const_name.empty() && const_name[0] == '_') {
@@ -417,20 +417,20 @@ std::ostream &CrystalCodeGen::ACTIONS_ARRAY()
 void CrystalCodeGen::STATE_IDS()
 {
 	if ( redFsm->startState != 0 )
-		STATIC_VAR( "int", START() ) << " = " << START_STATE_ID() << ";\n";
+		STATIC_VAR( "int", START() ) << " = " << START_STATE_ID() << "\n";
 
 	if ( !noFinal )
-		STATIC_VAR( "int" , FIRST_FINAL() ) << " = " << FIRST_FINAL_STATE() << ";\n";
+		STATIC_VAR( "int" , FIRST_FINAL() ) << " = " << FIRST_FINAL_STATE() << "\n";
 
 	if ( !noError )
-		STATIC_VAR( "int", ERROR() ) << " = " << ERROR_STATE() << ";\n";
+		STATIC_VAR( "int", ERROR() ) << " = " << ERROR_STATE() << "\n";
 
 	out << "\n";
 
 	if ( !noEntry && entryPointNames.length() > 0 ) {
 		for ( EntryNameVect::Iter en = entryPointNames; en.lte(); en++ ) {
-			STATIC_VAR( "int", DATA_PREFIX() + "en_" + *en ) << 
-					" = " << entryPointIds[en.pos()] << ";\n";
+			STATIC_VAR( "int", DATA_PREFIX() + "en_" + *en ) <<
+					" = " << entryPointIds[en.pos()] << "\n";
 		}
 		out << "\n";
 	}
@@ -759,7 +759,7 @@ void CrystalCodeGen::calcIndexSize()
 
 string CrystalCodeGen::TO_CONST(string name)
 {
-	// Convert variable name to Crystal constant name
+	// Convert variable name to Crystal constant name (must start with uppercase)
 	// Remove leading underscore and capitalize first character
 	string const_name = name;
 	if (!const_name.empty() && const_name[0] == '_') {

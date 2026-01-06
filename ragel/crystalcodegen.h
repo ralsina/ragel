@@ -110,6 +110,7 @@ public:
 	string TOKEND();
 	string DATA();
 
+	string TO_CONST(string name);  // Convert variable name to Crystal constant name
 
 	void finishRagelDef();
 	unsigned int arrayTypeSize( unsigned long maxVal );

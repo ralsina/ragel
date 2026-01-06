@@ -142,8 +142,8 @@ void CrystalTabCodeGen::COND_TRANSLATE()
 {
 	out <<
 		"	_widec = " << GET_KEY() << "\n"
-		"	_keys = " << CO() << "[" << vCS() << "]*2\n"
-		"	_klen = " << CL() << "[" << vCS() << "]\n"
+		"	_keys = " << TO_CONST(CO()) << "[" << vCS() << "]*2\n"
+		"	_klen = " << TO_CONST(CL()) << "[" << vCS() << "]\n"
 		"	if _klen > 0\n"
 		"		_lower = _keys\n"
 		"		_upper = _keys + (_klen<<1) - 2\n"
@@ -155,7 +155,7 @@ void CrystalTabCodeGen::COND_TRANSLATE()
 		"			elsif " << GET_WIDE_KEY() << " > " << CK() << "[_mid+1]\n"
 		"				_lower = _mid + 2\n"
 		"			else\n"
-		"				case " << C() << "[" << CO() << "[" << vCS() << "]"
+		"				case " << C() << "[" << TO_CONST(CO()) << "[" << vCS() << "]"
 							" + ((_mid - _keys)>>1)]\n";
 
 	for ( CondSpaceList::Iter csi = condSpaceList; csi.lte(); csi++ ) {
@@ -183,9 +183,9 @@ void CrystalTabCodeGen::COND_TRANSLATE()
 void CrystalTabCodeGen::LOCATE_TRANS()
 {
 	out <<
-		"	_keys = " << KO() << "[" << vCS() << "]\n"
-		"	_trans = " << IO() << "[" << vCS() << "]\n"
-		"	_klen = " << SL() << "[" << vCS() << "]\n"
+		"	_keys = " << TO_CONST(KO()) << "[" << vCS() << "]\n"
+		"	_trans = " << TO_CONST(IO()) << "[" << vCS() << "]\n"
+		"	_klen = " << TO_CONST(SL()) << "[" << vCS() << "]\n"
 		"	_break_match = false\n"
 		"	\n"
 		"	begin\n"
@@ -197,9 +197,9 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	        break if _upper < _lower\n"
 		"	        _mid = _lower + ( (_upper - _lower) >> 1 )\n"
 		"\n"
-		"	        if " << GET_WIDE_KEY() << " < " << K() << "[_mid]\n"
+		"	        if " << GET_WIDE_KEY() << " < " << TO_CONST(K()) << "[_mid]\n"
 		"	           _upper = _mid - 1\n"
-		"	        elsif " << GET_WIDE_KEY() << " > " << K() << "[_mid]\n"
+		"	        elsif " << GET_WIDE_KEY() << " > " << TO_CONST(K()) << "[_mid]\n"
 		"	           _lower = _mid + 1\n"
 		"	        else\n"
 		"	           _trans += (_mid - _keys)\n"
@@ -212,16 +212,16 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	     _trans += _klen\n"
 		"	  end"
 		"\n"
-		"	  _klen = " << RL() << "[" << vCS() << "]\n"
+		"	  _klen = " << TO_CONST(RL()) << "[" << vCS() << "]\n"
 		"	  if _klen > 0\n"
 		"	     _lower = _keys\n"
 		"	     _upper = _keys + (_klen << 1) - 2\n"
 		"	     loop do\n"
 		"	        break if _upper < _lower\n"
 		"	        _mid = _lower + (((_upper-_lower) >> 1) & ~1)\n"
-		"	        if " << GET_WIDE_KEY() << " < " << K() << "[_mid]\n"
+		"	        if " << GET_WIDE_KEY() << " < " << TO_CONST(K()) << "[_mid]\n"
 		"	          _upper = _mid - 2\n"
-		"	        elsif " << GET_WIDE_KEY() << " > " << K() << "[_mid+1]\n"
+		"	        elsif " << GET_WIDE_KEY() << " > " << TO_CONST(K()) << "[_mid+1]\n"
 		"	          _lower = _mid + 2\n"
 		"	        else\n"
 		"	          _trans += ((_mid - _keys) >> 1)\n"
@@ -288,13 +288,13 @@ void CrystalTabCodeGen::writeExec()
 	
 	if ( redFsm->anyFromStateActions() ) {
 		out << 
-			"	_acts = " << FSA() << "[" << vCS() << "]\n"
-			"	_nacts = " << A() << "[_acts]\n"
+			"	_acts = " << TO_CONST(FSA()) << "[" << vCS() << "]\n"
+			"	_nacts = " << TO_CONST(A()) << "[_acts]\n"
 			"	_acts += 1\n"
 			"	while _nacts > 0\n"
 			"		_nacts -= 1\n"
 			"		_acts += 1\n"
-			"		case " << A() << "[_acts - 1]\n";
+			"		case " << TO_CONST(A()) << "[_acts - 1]\n";
 		FROM_STATE_ACTION_SWITCH();
 		out <<
 			"		end\n"
@@ -310,7 +310,7 @@ void CrystalTabCodeGen::writeExec()
 	LOCATE_TRANS();
 
 	if ( useIndicies )
-		out << "	_trans = " << I() << "[_trans]\n";
+		out << "	_trans = " << TO_CONST(I()) << "[_trans]\n";
 
 	if ( redFsm->anyEofTrans() ) {
 		out << 
@@ -321,18 +321,18 @@ void CrystalTabCodeGen::writeExec()
 	if ( redFsm->anyRegCurStateRef() )
 		out << "	_ps = " << vCS() << "\n";
 
-	out << "	" << vCS() << " = " << TT() << "[_trans]\n";
+	out << "	" << vCS() << " = " << TO_CONST(TT()) << "[_trans]\n";
 
 	if ( redFsm->anyRegActions() ) {
 		out << 
-			"	if " << TA() << "[_trans] != 0\n"
-			"		_acts = " << TA() << "[_trans]\n"
-			"		_nacts = " << A() << "[_acts]\n"
+			"	if " << TO_CONST(TA()) << "[_trans] != 0\n"
+			"		_acts = " << TO_CONST(TA()) << "[_trans]\n"
+			"		_nacts = " << TO_CONST(A()) << "[_acts]\n"
 			"		_acts += 1\n"
 			"		while _nacts > 0\n"
 			"			_nacts -= 1\n"
 			"			_acts += 1\n"
-			"			case " << A() << "[_acts - 1]\n";
+			"			case " << TO_CONST(A()) << "[_acts - 1]\n";
 		ACTION_SWITCH();
 		out <<
 			"			end\n"
@@ -350,13 +350,13 @@ void CrystalTabCodeGen::writeExec()
 
 	if ( redFsm->anyToStateActions() ) {
 		out <<
-			"	_acts = " << TSA() << "["  << vCS() << "]\n"
-			"	_nacts = " << A() << "[_acts]\n"
+			"	_acts = " << TO_CONST(TSA()) << "["  << vCS() << "]\n"
+			"	_nacts = " << TO_CONST(A()) << "[_acts]\n"
 			"	_acts += 1\n"
 			"	while _nacts > 0\n"
 			"		_nacts -= 1\n"
 			"		_acts += 1\n"
-			"		case " << A() << "[_acts - 1]\n";
+			"		case " << TO_CONST(A()) << "[_acts - 1]\n";
 		TO_STATE_ACTION_SWITCH();
 		out <<
 			"		end # to state action switch\n"
@@ -409,13 +409,13 @@ void CrystalTabCodeGen::writeExec()
 
 		if ( redFsm->anyEofActions() ) {
 			out << 
-				"	__acts = " << EA() << "[" << vCS() << "]\n"
-				"	__nacts = " << " " << A() << "[__acts]\n"
+				"	__acts = " << TO_CONST(EA()) << "[" << vCS() << "]\n"
+				"	__nacts = " << " " << TO_CONST(A()) << "[__acts]\n"
 				"	__acts += 1\n"
 				"	while __nacts > 0\n"
 				"		__nacts -= 1\n"
 				"		__acts += 1\n"
-				"		case " << A() << "[__acts - 1]\n";
+				"		case " << TO_CONST(A()) << "[__acts - 1]\n";
 			EOF_ACTION_SWITCH() <<
 				"		end # eof action switch\n"
 				"	end\n"
@@ -910,19 +910,19 @@ void CrystalTabCodeGen::writeData()
 	/* If there are any transtion functions then output the array. If there
 	 * are none, don't bother emitting an empty array that won't be used. */
 	if ( redFsm->anyActions() ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActArrItem), A() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActArrItem), TO_CONST(A()) );
 		ACTIONS_ARRAY();
 		CLOSE_ARRAY() <<
 		"\n";
 	}
 
 	if ( redFsm->anyConditions() ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxCondOffset), CO() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxCondOffset), TO_CONST(CO()) );
 		COND_OFFSETS();
 		CLOSE_ARRAY() <<
 		"\n";
 
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxCondLen), CL() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxCondLen), TO_CONST(CL()) );
 		COND_LENS();
 		CLOSE_ARRAY() <<
 		"\n";
@@ -938,57 +938,57 @@ void CrystalTabCodeGen::writeData()
 		"\n";
 	}
 
-	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxKeyOffset), KO() );
+	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxKeyOffset), TO_CONST(KO()) );
 	KEY_OFFSETS();
 	CLOSE_ARRAY() <<
 	"\n";
 
-	OPEN_ARRAY( WIDE_ALPH_TYPE(), K() );
+	OPEN_ARRAY( WIDE_ALPH_TYPE(), TO_CONST(K()) );
 	KEYS();
 	CLOSE_ARRAY() <<
 	"\n";
 
-	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxSingleLen), SL() );
+	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxSingleLen), TO_CONST(SL()) );
 	SINGLE_LENS();
 	CLOSE_ARRAY() <<
 	"\n";
 
-	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxRangeLen), RL() );
+	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxRangeLen), TO_CONST(RL()) );
 	RANGE_LENS();
 	CLOSE_ARRAY() <<
 	"\n";
 
-	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxIndexOffset), IO() );
+	OPEN_ARRAY( ARRAY_TYPE(redFsm->maxIndexOffset), TO_CONST(IO()) );
 	INDEX_OFFSETS();
 	CLOSE_ARRAY() <<
 	"\n";
 
 	if ( useIndicies ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxIndex), I() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxIndex), TO_CONST(I()) );
 		INDICIES();
 		CLOSE_ARRAY() <<
 		"\n";
 
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxState), TT() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxState), TO_CONST(TT()) );
 		TRANS_TARGS_WI();
 		CLOSE_ARRAY() <<
 		"\n";
 
 		if ( redFsm->anyActions() ) {
-			OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TA() );
+			OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TO_CONST(TA()) );
 			TRANS_ACTIONS_WI();
 			CLOSE_ARRAY() <<
 			"\n";
 		}
 	}
 	else {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxState), TT() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxState), TO_CONST(TT()) );
 		TRANS_TARGS();
 		CLOSE_ARRAY() <<
 		"\n";
 
 		if ( redFsm->anyActions() ) {
-			OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TA() );
+			OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TO_CONST(TA()) );
 			TRANS_ACTIONS();
 			CLOSE_ARRAY() <<
 			"\n";
@@ -996,21 +996,21 @@ void CrystalTabCodeGen::writeData()
 	}
 
 	if ( redFsm->anyToStateActions() ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TSA() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TO_CONST(TSA()) );
 		TO_STATE_ACTIONS();
 		CLOSE_ARRAY() <<
 		"\n";
 	}
 
 	if ( redFsm->anyFromStateActions() ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), FSA() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TO_CONST(FSA()) );
 		FROM_STATE_ACTIONS();
 		CLOSE_ARRAY() <<
 		"\n";
 	}
 
 	if ( redFsm->anyEofActions() ) {
-		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), EA() );
+		OPEN_ARRAY( ARRAY_TYPE(redFsm->maxActionLoc), TO_CONST(EA()) );
 		EOF_ACTIONS();
 		CLOSE_ARRAY() <<
 		"\n";

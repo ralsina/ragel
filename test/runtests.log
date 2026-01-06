@@ -1,0 +1,11 @@
+../ragel/ragel -R -n -T0 -o atoi3.rb atoi3.rl
+running atoi3 ... atoi3.rb:224:in 'Integer#-': String can't be coerced into Integer (TypeError)
+
+		val = val * 10 + (data[p].ord - "0"[0]);
+		                                ^^^^^^
+	from atoi3.rb:224:in 'Object#run_machine'
+	from atoi3.rb:285:in 'block in <main>'
+	from atoi3.rb:285:in 'Array#each'
+	from atoi3.rb:285:in '<main>'
+FAILED
+FAIL runtests (exit status: 1)

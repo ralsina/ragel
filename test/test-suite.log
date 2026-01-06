@@ -1,0 +1,40 @@
+=====================================
+   ragel 6.10: test/test-suite.log
+=====================================
+
+# TOTAL: 1
+# PASS:  0
+# SKIP:  0
+# XFAIL: 0
+# FAIL:  1
+# XPASS: 0
+# ERROR: 0
+
+System information (uname -a): Linux 6.18.2-arch2-1 #1 SMP PREEMPT_DYNAMIC Thu, 18 Dec 2025 18:00:18 +0000 x86_64
+Distribution information (/etc/os-release):
+NAME="EndeavourOS"
+PRETTY_NAME="EndeavourOS"
+ID="endeavouros"
+ID_LIKE="arch"
+BUILD_ID="2024.06.25"
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://endeavouros.com"
+DOCUMENTATION_URL="https://discovery.endeavouros.com"
+
+.. contents:: :depth: 2
+
+FAIL: runtests
+==============
+
+../ragel/ragel -R -n -T0 -o atoi3.rb atoi3.rl
+running atoi3 ... atoi3.rb:224:in 'Integer#-': String can't be coerced into Integer (TypeError)
+
+		val = val * 10 + (data[p].ord - "0"[0]);
+		                                ^^^^^^
+	from atoi3.rb:224:in 'Object#run_machine'
+	from atoi3.rb:285:in 'block in <main>'
+	from atoi3.rb:285:in 'Array#each'
+	from atoi3.rb:285:in '<main>'
+FAILED
+FAIL runtests (exit status: 1)
+
