@@ -84,14 +84,33 @@ string CrystalCodeGen::DATA_PREFIX()
 
 std::ostream &CrystalCodeGen::STATIC_VAR( string type, string name )
 {
-	out << "@@" << name;
+	// In Crystal, constants must start with uppercase letter A-Z
+	// Remove leading underscore and capitalize first character
+	string const_name = name;
+	if (!const_name.empty() && const_name[0] == '_') {
+		const_name = const_name.substr(1);  // Remove leading underscore
+	}
+	if (!const_name.empty()) {
+		const_name[0] = toupper(const_name[0]);
+	}
+	out << const_name;
 	return out;
 }
 
 
 std::ostream &CrystalCodeGen::OPEN_ARRAY( string type, string name )
 {
-	out << "@@" << name << " = [\n";
+	// In Crystal, constants must start with uppercase letter A-Z
+	// Remove leading underscore and capitalize first alphabetic character
+	string const_name = name;
+	if (!const_name.empty() && const_name[0] == '_') {
+		const_name = const_name.substr(1);  // Remove leading underscore
+	}
+	if (!const_name.empty()) {
+		// Capitalize first character
+		const_name[0] = toupper(const_name[0]);
+	}
+	out << const_name << " = [";
 	return out;
 }
 
@@ -738,6 +757,20 @@ void CrystalCodeGen::calcIndexSize()
 	useIndicies = sizeWithInds < sizeWithoutInds;
 }
 
+string CrystalCodeGen::TO_CONST(string name)
+{
+	// Convert variable name to Crystal constant name
+	// Remove leading underscore and capitalize first character
+	string const_name = name;
+	if (!const_name.empty() && const_name[0] == '_') {
+		const_name = const_name.substr(1);  // Remove leading underscore
+	}
+	if (!const_name.empty()) {
+		const_name[0] = toupper(const_name[0]);
+	}
+	return const_name;
+}
+
 unsigned int CrystalCodeGen::arrayTypeSize( unsigned long maxVal )
 {
 	long long maxValLL = (long long) maxVal;
@@ -751,13 +784,13 @@ void CrystalCodeGen::writeInit()
 {
 	out << "begin\n";
 	
-	out << "	" << P() << " ||= 0\n";
+	out << "	" << P() << " = 0\n";
 
-	if ( !noEnd ) 
-		out << "	" << PE() << " ||= " << DATA() << ".length\n";
+	if ( !noEnd )
+		out << "	" << PE() << " = " << DATA() << ".size\n";
 
 	if ( !noCS )
-		out << "	" << vCS() << " = " << START() << "\n";
+		out << "	" << vCS() << " = " << TO_CONST(START()) << "\n";
 
 	/* If there are any calls, then the stack top needs initialization. */
 	if ( redFsm->anyActionCalls() || redFsm->anyActionRets() )
