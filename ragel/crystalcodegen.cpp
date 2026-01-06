@@ -84,23 +84,14 @@ string CrystalCodeGen::DATA_PREFIX()
 
 std::ostream &CrystalCodeGen::STATIC_VAR( string type, string name )
 {
-	out << 
-		"class << self\n"
-		"	attr_accessor :" << name << "\n"
-		"end\n"
-		"self." << name;
+	out << "@@" << name;
 	return out;
 }
 
 
 std::ostream &CrystalCodeGen::OPEN_ARRAY( string type, string name )
 {
-	out << 
-		"class << self\n"
-		"	attr_accessor :" << name << "\n"
-		"	private :" << name << ", :" << name << "=\n"
-		"end\n"
-		"self." << name << " = [\n";
+	out << "@@" << name << " = [\n";
 	return out;
 }
 

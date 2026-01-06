@@ -161,7 +161,7 @@ void CrystalTabCodeGen::COND_TRANSLATE()
 	for ( CondSpaceList::Iter csi = condSpaceList; csi.lte(); csi++ ) {
 		GenCondSpace *condSpace = csi;
 		out << "	when " << condSpace->condSpaceId << " then" ;
-		out << "	_widec = " << KEY(condSpace->baseKey) << 
+		out << "	_widec = " << KEY(condSpace->baseKey) <<
 				"+ (" << GET_KEY() << " - " << KEY(keyOps->minKey) << ")\n";
 
 		for ( GenCondSet::Iter csi = condSpace->condSet; csi.lte(); csi++ ) {
@@ -173,9 +173,9 @@ void CrystalTabCodeGen::COND_TRANSLATE()
 	}
 
 	out <<
-		"				end # case\n"
+		"				end\n"
 		"			end\n"
-		"		end # loop\n"
+		"		end\n"
 		"	end\n";
 }
 
@@ -206,7 +206,7 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	           _break_match = true\n"
 		"	           break\n"
 		"	        end\n"
-		"	     end # loop\n"
+		"	     end\n"
 		"	     break if _break_match\n"
 		"	     _keys += _klen\n"
 		"	     _trans += _klen\n"
@@ -228,30 +228,31 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	          _break_match = true\n"
 		"	          break\n"
 		"	        end\n"
-		"	     end # loop\n"
+		"	     end\n"
 		"	     break if _break_match\n"
 		"	     _trans += _klen\n"
 		"	  end\n"
-		"	end while false\n";
+		"	end\n";
 }
 
 void CrystalTabCodeGen::writeExec()
 {
-	out << 
+	out <<
 		"begin\n"
-		"	_klen, _trans, _keys";
+		"	_klen = 0\n"
+		"	_trans = 0\n"
+		"	_keys = 0\n";
 
 	if ( redFsm->anyRegCurStateRef() )
-		out << ", _ps";
-	if ( redFsm->anyConditions() ) 
-		out << ", _widec";
-	if ( redFsm->anyToStateActions() || redFsm->anyRegActions() 
+		out << "	_ps = 0\n";
+	if ( redFsm->anyConditions() )
+		out << "	_widec = 0\n";
+	if ( redFsm->anyToStateActions() || redFsm->anyRegActions()
 			|| redFsm->anyFromStateActions() )
-		out << ", _acts, _nacts";
+		out << "	_acts = 0\n"
+		       "	_nacts = 0\n";
 
-	out << " = nil\n";
-
-	out << 
+	out <<
 		"	_goto_level = 0\n"
 		"	_resume = 10\n"
 		"	_eof_trans = 15\n"
@@ -296,7 +297,7 @@ void CrystalTabCodeGen::writeExec()
 			"		case " << A() << "[_acts - 1]\n";
 		FROM_STATE_ACTION_SWITCH();
 		out <<
-			"		end # from state action switch\n"
+			"		end\n"
 			"	end\n"
 			"	if _trigger_goto\n"
 			"		next\n"
@@ -334,7 +335,7 @@ void CrystalTabCodeGen::writeExec()
 			"			case " << A() << "[_acts - 1]\n";
 		ACTION_SWITCH();
 		out <<
-			"			end # action switch\n"
+			"			end\n"
 			"		end\n"
 			"	end\n"
 			"	if _trigger_goto\n"
