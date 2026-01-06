@@ -14,8 +14,9 @@ Crystal code generation for Ragel is **fully production-ready** for table-style 
 | **atoi.rl**    | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | 1/1 |
 | **rpn.rl**     | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | 13/13 |
 | **scanner.rl** | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | 3/3 |
+| **utf8_test.rl** | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | 1/1 |
 
-**Overall**: **12/12 test combinations passing (100%)**
+**Overall**: **16/16 test combinations passing (100%)**
 
 ## Detailed Test Results
 
@@ -100,6 +101,42 @@ abba abba add            → 1332    (hex input)
 - State machine final states
 - Multiple test cases in one program
 - Basic output actions
+
+---
+
+### 4. utf8_test.rl - Multi-byte UTF-8 Pattern Matching
+
+**Purpose**: Validate multi-byte pattern matching and sign-extension fix
+
+**Test Command**: `./utf8_test`
+
+**Input**: `Bytes[0xC3, 0xB1]` (ñ in UTF-8, a 2-byte sequence)
+
+**Results by Style**:
+- `-T0` (Standard Table): ✅ **2byte matched**, p=2, pe=2
+- `-T1` (Fast Table): ✅ **2byte matched**, p=2, pe=2
+- `-F0` (Standard Flat): ✅ **2byte matched**, p=2, pe=2
+- `-F1` (Fast Flat): ✅ **2byte matched**, p=2, pe=2
+
+**Features Validated**:
+- Multi-byte UTF-8 pattern matching (0xC2..0xDF 0x80..0xBF)
+- Correct range comparison with signed values
+- Sign-extension of UInt8 to Int32
+- Complex alternations (utf8_2byte | utf8_1byte)
+- Byte consumption (both bytes consumed)
+
+**Why This Test Matters**:
+
+Before the sign-extension fix, multi-byte patterns failed because:
+- `data[p]` returned UInt8 (0-255)
+- Ragel's trans_keys use signed Int8 values (-128 to 127)
+- Unsigned comparison broke range matching
+- 0xC3 (195) incorrectly matched 1-byte pattern instead of 2-byte pattern
+
+After fix:
+- `(data[p].to_i32 << 24) >> 24` sign-extends to signed
+- 0xC3 correctly becomes -61 for range matching
+- Multi-byte patterns work correctly
 
 ---
 
