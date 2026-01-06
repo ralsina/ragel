@@ -135,6 +135,8 @@ tests.each do |test|
   elsif res != expected
     STDERR.puts "FAIL rpn(#{input.inspect}) -> #{res.inspect} != #{expected.inspect}"
     rc = 1
+  else
+    STDERR.puts "SUCCESS rpn(#{input.inspect}) -> #{res.inspect}"
   end
 end
 
