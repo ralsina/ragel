@@ -27,14 +27,12 @@ def atoi(data : String) : Int64
     write exec;
   }%%
 
-  STDERR.puts "After exec: p=#{p}, pe=#{pe}, cs=#{cs}, data.size=#{data.size}, data='#{data.inspect}', val=#{val}"
-
   if neg
     val = -val
   end
 
   if cs < Atoi_first_final
-    STDERR.puts "atoi: there was an error (cs=#{cs}, first_final=#{Atoi_first_final})"
+    STDERR.puts "atoi: there was an error"
   end
 
   return val
