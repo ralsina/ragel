@@ -188,7 +188,7 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	_klen = " << TO_CONST(SL()) << "[" << vCS() << "]\n"
 		"	_break_match = false\n"
 		"	\n"
-		"	begin\n"
+		"	loop do\n"
 		"	  if _klen > 0\n"
 		"	     _lower = _keys\n"
 		"	     _upper = _keys + _klen - 1\n"
@@ -232,6 +232,7 @@ void CrystalTabCodeGen::LOCATE_TRANS()
 		"	     break if _break_match\n"
 		"	     _trans += _klen\n"
 		"	  end\n"
+		"	  break  # Exit loop after executing once\n"
 		"	end\n";
 }
 
