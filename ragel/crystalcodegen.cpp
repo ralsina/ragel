@@ -308,9 +308,11 @@ string CrystalCodeGen::GET_KEY()
 		ret << ")";
 	}
 	else {
-		/* Expression for retrieving the key. For Crystal, data is Bytes or Slice(UInt8),
-		 * so indexing returns UInt8 directly (no .ord needed). */
-		ret << DATA() << "[" << P() << "]";
+		/* Expression for retrieving the key. For Crystal, data is Slice(UInt8), so we
+		 * need to sign-extend to Int32 for correct comparison with trans_keys (which
+		 * contain negative values). The bit-twiddling (x << 24) >> 24 sign-extends
+		 * the UInt8 value, so 0xC3 (195) becomes -61 for proper range matching. */
+		ret << "((" << DATA() << "[" << P() << "].to_i32 << 24) >> 24)";
 	}
 	return ret.str();
 }
