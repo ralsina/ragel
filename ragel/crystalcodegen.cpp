@@ -308,9 +308,9 @@ string CrystalCodeGen::GET_KEY()
 		ret << ")";
 	}
 	else {
-		/* Expression for retrieving the key, use dereference and read ordinal,
-		 * for Crystal character ordinal access. */
-		ret << DATA() << "[" << P() << "].ord";
+		/* Expression for retrieving the key. For Crystal, data is Bytes or Slice(UInt8),
+		 * so indexing returns UInt8 directly (no .ord needed). */
+		ret << DATA() << "[" << P() << "]";
 	}
 	return ret.str();
 }

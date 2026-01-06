@@ -72,6 +72,7 @@
 #include "rbxgoto.h"
 
 #include "crystaltable.h"
+#include "crystalflat.h"
 
 string itoa( int i )
 {
@@ -368,10 +369,16 @@ CodeGenData *crystalMakeCodeGen( const char *sourceFileName, const char *fsmName
 	CodeGenData *codeGen = 0;
 	switch ( codeStyle ) {
 		case GenTables:
+		case GenFTables:
 			codeGen = new CrystalTabCodeGen(out);
 			break;
+		case GenFlat:
+		case GenFFlat:
+			codeGen = new CrystalFlatCodeGen(out);
+			break;
 		default:
-			cerr << "Table style is currently the only style supported for Crystal.\n";
+			cerr << "Crystal supports table (-T0, -T1) and flat (-F0, -F1) code styles. "
+			     << "Goto-style is not available because Crystal has no goto statement.\n";
 			exit(1);
 			break;
 	}

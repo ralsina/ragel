@@ -6,7 +6,7 @@
 	write data;
 }%%
 
-def atoi(data : String) : Int64
+def atoi(data : Slice(UInt8)) : Int64
   val = 0_i64
   neg = false
 
@@ -16,7 +16,7 @@ def atoi(data : String) : Int64
     }
 
     action add_digit {
-      val = val * 10 + (data[p].ord - 48)
+      val = val * 10 + (data[p] - 48)
     }
 
     main :=
@@ -39,4 +39,4 @@ def atoi(data : String) : Int64
 end
 
 # Test it
-puts atoi(STDIN.gets.not_nil!)
+puts atoi(STDIN.gets.not_nil!.to_slice)

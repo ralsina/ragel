@@ -14,7 +14,7 @@ ragel_SOURCES = \
 	parsedata.h rlparse.h rubytable.h cdfgoto.h cdtable.h csflat.h \
 	dotcodegen.h parsetree.h rlscan.h version.h cdflat.h common.h \
 	csftable.h fsmgraph.h pcheck.h rubycodegen.h xmlcodegen.h cdftable.h \
-	csgoto.h gendata.h ragel.h rubyfflat.h crystalcodegen.h crystaltable.h \
+	csgoto.h gendata.h ragel.h rubyfflat.h crystalcodegen.h crystaltable.h crystalflat.h \
 	gocodegen.h gotable.h goftable.h goflat.h gofflat.h gogoto.h gofgoto.h \
 	goipgoto.h gotablish.h \
 	mlcodegen.h mltable.h mlftable.h mlflat.h mlfflat.h mlgoto.h mlfgoto.h \
@@ -23,7 +23,7 @@ ragel_SOURCES = \
 	inputdata.cpp common.cpp redfsm.cpp gendata.cpp cdcodegen.cpp \
 	cdtable.cpp cdftable.cpp cdflat.cpp cdfflat.cpp cdgoto.cpp cdfgoto.cpp \
 	cdipgoto.cpp cdsplit.cpp javacodegen.cpp rubycodegen.cpp rubytable.cpp \
-	rubyftable.cpp rubyflat.cpp rubyfflat.cpp rbxgoto.cpp crystalcodegen.cpp crystaltable.cpp cscodegen.cpp \
+	rubyftable.cpp rubyflat.cpp rubyfflat.cpp rbxgoto.cpp crystalcodegen.cpp crystaltable.cpp crystalflat.cpp cscodegen.cpp \
 	cstable.cpp csftable.cpp csflat.cpp csfflat.cpp csgoto.cpp csfgoto.cpp \
 	csipgoto.cpp cssplit.cpp dotcodegen.cpp xmlcodegen.cpp \
 	gocodegen.cpp gotable.cpp goftable.cpp goflat.cpp gofflat.cpp gogoto.cpp gofgoto.cpp \
